@@ -42,3 +42,10 @@ th td{
 .btn-primary:hover{
   background: rgb(18, 44, 114)
 }
+.ant-spin{
+  position: absolute;
+  top: 40%;
+  bottom: 50%;
+  right: 50%;
+  left: 50%;
+}

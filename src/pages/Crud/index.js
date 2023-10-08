@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Table} from 'antd'
+import {Table, Spin} from 'antd'
 import axios from 'axios';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -150,16 +150,23 @@ export default function CrudApps(){
       )
   }
 
+  console.log('data', data.length)
+
   return (
     <>
       <h1>CRUD APPS</h1>
-      <Link to={ROUTES.CRUD_FORM()} className={styles.logLink}>
+      { data.length === 0 ? <Spin size="large"/> :
+      (<>
+        <Link to={ROUTES.CRUD_FORM()} className={styles.logLink}>
         <button className="btn-primary" style={{marginBottom: '32px'}}>Tambah User</button>
-      </Link>
-      <Table 
-        columns={column}
-        dataSource={data} 
-      />
+        </Link>
+        <Table 
+          columns={column}
+          dataSource={data} 
+        />
+      </>)
+      }
+      
       <Modal
         title="Hapus Data"
         open={modalDelete}
