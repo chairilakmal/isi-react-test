@@ -1,0 +1,169 @@
+.mainContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+.logContainer {
+  background: rgb(243 244 246);
+  display: grid;
+  grid-template-columns: auto auto;
+  & .logLink{
+    cursor: pointer;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: start;
+    padding: 16px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    & div {
+      margin: auto;
+      & label {
+        font-size: 12px;
+        color: rgb(107 114 128);
+      }
+      & p{
+        margin: 0;
+      }
+    }
+  }
+  & .logLink:hover{
+    background: rgb(229 231 235);
+    & div {
+    transform: scale(1.1);
+    transition: all .2s ease-in-out; 
+    }
+  }
+}
+.appContainer {
+  cursor: pointer;
+  background: rgb(30 58 138);  
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  h4{
+    background: red;
+  }
+  & .crudLink {
+    color: white;
+    font-weight: 600;
+  }
+  &:hover{
+    background: rgb(18, 44, 114);
+    & .crudLink {
+    transform: scale(1.1);
+    transition: all .2s ease-in-out; 
+    }
+  }
+}
+.inputContainer{
+  margin-top: 32px;
+  max-width: 408px;
+  & .inputContent{
+    margin: 16px 0px;
+    & .inputWrapper{
+        & button:first-of-type{
+          color: white;
+          background: rgb(30 58 138);
+          &:hover{
+            background: rgb(18, 44, 114)
+          }
+          &:disabled{
+            cursor: not-allowed;
+            color: #3e4246;
+            background: #cfd5da;
+          }
+        }
+    }
+  }
+  & .resultWrapper{
+    margin-top: 8px;
+  }
+}
+
+.inputWrapper{
+  display: flex;
+  & > div {
+    display: flex;
+    flex-direction: column;
+    & label {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    & input {
+      border: 1px solid rgb(201, 195, 195);
+      border-radius: 6px;
+      padding: 0px 8px;
+      height: 40px;
+      width: 320px;
+      &:focus{
+        outline: none;
+      }
+    }
+  }
+  & button{
+    margin-left: 8px;
+    height: 40px;
+    margin-top: auto;
+    border-radius: 6px;
+    border: 1px solid rgb(201, 195, 195);
+    cursor: pointer;
+    padding: 8px;
+  }
+}
+.radioWrapper {
+  & label {
+    font-weight: 600;
+  }
+  & > div {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    & input{
+      cursor: pointer;
+      width: 16px; height: 16px;
+    }
+  }
+}
+.dateWrapper {
+  display: flex;
+  flex-direction: column;
+  & label {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  & input {
+    border: 1px solid rgb(201, 195, 195);
+    border-radius: 6px;
+    padding: 0px 8px;
+    height: 40px;
+    width: 320px;
+    &:focus{
+      outline: none;
+    }
+  }
+}
+.table{
+  margin-top: 16px;
+}
+.formContent{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.actionCol{
+  display: flex;
+  gap: 8px
+}
+.delete{
+  color: red;
+  cursor: pointer;
+}
+.undeveloped{
+  color: #cfd5da;
+  pointer-events: none;
+}
