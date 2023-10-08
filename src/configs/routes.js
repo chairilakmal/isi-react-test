@@ -19,6 +19,9 @@ const routes = {
   },
   CRUD_FORM(){
     return '/crud-apps/form'
+  },
+  EDIT_USER(id){
+    return `/crud-apps/form/edit/${id}`
   }
 }
 export default routes

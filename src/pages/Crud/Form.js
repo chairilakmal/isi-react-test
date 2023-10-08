@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import { Formik } from 'formik';
 import axios from "axios";
@@ -15,10 +16,14 @@ export default function CrudForm(){
       gender: '',
       birthDate: '',
     },
-    success: false
+    success: false,
+    userByID:[]
   })
-  const { initialValues, success } = state
+  const { initialValues, success, userByID } = state
   const form = useRef();
+
+  const location = useLocation();
+  let id = location.pathname.split("/").pop()
 
   let token = sessionStorage.getItem('token')
 
@@ -33,15 +38,43 @@ export default function CrudForm(){
     }
   },[success])
 
+  useEffect(() => {
+    if(id){
+      getDataById()
+    }
+  },[id])
+
+  const getDataById = () => {
+    axios(withToken({ method:'GET', baseURL: baseURL, token: token, url: `${baseURL}user/${id}` }))
+        .then((res) => {
+          setState(s => {
+            return { ...s, 
+              userByID: res.data.data,
+              initialValues: {
+                name: res.data.data.name,
+                address: res.data.data.address,
+                gender: res.data.data.gender,
+                birthDate: res.data.data.born_date,
+              },
+            }
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+        });
+  }
+
   const _handleSubmit = () => {
     let payload={},  { current: { values } } = form;
     payload = {
       name: values.name,
       address: values.address,
-      gender: values.gender === 'Pria' ? 'p' : 'l',
+      gender: values.gender === 'Pria' ? 'l' : 'p',
       born_date: values.birthDate
     }
-    axios(withToken({ method:'POST', baseURL: baseURL, token: token, url: `${baseURL}user`, data: payload }))
+    let method = id ? 'PUT' : 'POST';
+    let url = id ? `${baseURL}user/${id}` : `${baseURL}user`
+    axios(withToken({ method:method, baseURL: baseURL, token: token, url: url, data: payload }))
       .then((res) => {
         setState(s => {
           return { ...s, success: true}
@@ -53,10 +86,11 @@ export default function CrudForm(){
   }
   const modalSuccess = () => {
     Modal.success({
-      content: 'Input Berhasil',
+      content: id ? 'Edit Berhasil': 'Input Berhasil',
     });
   };
   const renderForm = ({values, handleChange, setFieldValue, handleSubmit}) =>{
+    console.log(values)
     return (
       <form onSubmit={handleSubmit}>
       <div className={clsx(styles.inputContent, styles.formContent)}>
@@ -93,7 +127,7 @@ export default function CrudForm(){
                 type="radio" 
                 id="pria" 
                 name="pria" 
-                checked={values.gender === 'Pria'}
+                checked={values.gender === 'Pria' || values.gender === 'l'}
                 value="Pria"
                 onChange={({ target: { value } }) => setFieldValue('gender', value)}
               />
@@ -104,7 +138,7 @@ export default function CrudForm(){
                 type="radio" 
                 id="wanita" 
                 name="wanita" 
-                checked={values.gender === 'Wanita'}
+                checked={values.gender === 'Wanita' || values.gender === 'p'}
                 value="Wanita"
                 onChange={({ target: { value } }) => setFieldValue('gender', value)}
               />

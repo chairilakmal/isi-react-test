@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import Table from './Table'
 import {Table} from 'antd'
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -18,14 +17,32 @@ export default function CrudApps(){
   let baseURL = 'https://cms-admin-v2.ihsansolusi.co.id/testapi/';
 
   const [state, setState] = useState({
-    data:[], modalDelete: false, delTarget: undefined, successDelete: false
+    data:[], modalDelete: false, delTarget: undefined, successDelete: false, modalDetail: false, userByID:[]
   })
 
-  const { data, modalDelete, delTarget, successDelete } = state
+  const { data, modalDelete, delTarget, successDelete, modalDetail, userByID } = state
 
   useEffect(()=>{
     getData()
   },[])
+
+  const handleDetail = (id) => {
+    axios(withToken({ method:'GET', baseURL: baseURL, token: token, url: `${baseURL}user/${id}` }))
+        .then((res) => {
+          setState(s => {
+            return { ...s, userByID: res.data.data}
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+        });
+    setState(s => {
+      return { ...s, modalDetail: true}
+    })
+  }
+  const handleEdit = (id) => {
+    window.location = ROUTES.EDIT_USER(id);
+  }
 
   const handleDelete = (id) => {
     setState(s => {
@@ -49,7 +66,7 @@ export default function CrudApps(){
   }
   const handleClose = () => {
     setState(s => {
-      return { ...s, modalDelete: false, successDelete: false}
+      return { ...s, modalDelete: false, successDelete: false, modalDetail: false}
     })
   }
   const getData = () => {
@@ -89,7 +106,7 @@ export default function CrudApps(){
       width: 80,
       dataIndex: 'gender',
       render:(gender)=>{
-        return gender === 'p' ? 'Pria' : 'Wanita' 
+        return gender === 'p' ? 'Wanita' : 'Pria' 
       }
     },
     {
@@ -114,14 +131,24 @@ export default function CrudApps(){
       render: (data) => {
         return (
           <div className={styles.actionCol}>
-            <div className={styles.undeveloped}>View</div>
-            <div className={styles.undeveloped}>Edit</div>
-            <div onClick={handleDelete.bind(this, data.id)} className={styles.delete}>Delete</div>
+            <div onClick={handleDetail.bind(this, data.id)} className={styles.view}>[View]</div>
+            <div onClick={handleEdit.bind(this, data.id)} className={styles.edit}>[Edit]</div>
+            <div onClick={handleDelete.bind(this, data.id)} className={styles.delete}>[Delete]</div>
           </div>
         )
       }
     },
   ]
+  const renderDetail = () => {
+      return(
+        <>
+          <div>Nama : {userByID.name}</div>
+          <div>Alamat : {userByID.address}</div>
+          <div>P/W : {userByID.gender === 'p' ? 'Wanita' : 'Pria'}</div>
+          <div>Tanggal Lahir : {dayjs.utc(userByID.born_date).format('DD MMM. YYYY')}</div>
+        </>
+      )
+  }
 
   return (
     <>
@@ -134,7 +161,7 @@ export default function CrudApps(){
         dataSource={data} 
       />
       <Modal
-        title="Hapus Data ?"
+        title="Hapus Data"
         open={modalDelete}
         onOk={confirmDelete}
         onCancel={handleClose}
@@ -148,6 +175,14 @@ export default function CrudApps(){
         onCancel={handleClose}
       >
         Data telah berhasil dihapus
+      </Modal>
+      <Modal
+        title="Detail User"
+        open={modalDetail}
+        onOk={handleClose}
+        onCancel={handleClose}
+      >
+        { renderDetail() }
       </Modal>
     </>
   )

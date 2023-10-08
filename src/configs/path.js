@@ -20,6 +20,7 @@ function Path(){
       <Route path={ROUTES.INPUT_SERIES_PAGE()} component={InputSeries}/>
       <Route path={ROUTES.CRUD_APPS()} component={CrudApps} exact/>
       <Route path={ROUTES.CRUD_FORM()} component={CrudForm}/>
+      <Route path={ROUTES.EDIT_USER()} component={CrudForm}/>
     </Router>
   )
 }
